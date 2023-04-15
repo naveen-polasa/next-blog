@@ -1,5 +1,6 @@
 import AddToCart from "@/app/components/AddToCart";
 import axios from "axios";
+import Image from "next/image";
 import Link from "next/link";
 
 export default async function page({ params }: { params: { id: number } }) {
@@ -15,6 +16,7 @@ export default async function page({ params }: { params: { id: number } }) {
     rating,
     title,
   } = data;
+
   return (
     <section>
       <div className="max-w-7xl mx-auto min-h-[calc(100vh-9rem)]">

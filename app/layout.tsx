@@ -1,4 +1,5 @@
 import Navbar from "./components/Navbar";
+import ContextProvider from "./context";
 import "./globals.css";
 
 export const metadata = {
@@ -14,8 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning>
-        <Navbar/>
-        {children}</body>
+        <Navbar />
+        <ContextProvider>{children}</ContextProvider>
+      </body>
     </html>
   );
 }

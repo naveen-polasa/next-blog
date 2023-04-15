@@ -6,6 +6,7 @@ type ResType = {
   category: string;
   image: string;
   rating: object;
+  quantity?: number;
 };
 
 type ProdType = {

@@ -29,11 +29,11 @@ const CartDetails = () => {
         <div className="flex justify-between">
           <h4 className="font-semibold text-2xl">Order Total :</h4>
           <span className="font-mono text-2xl mr-10">
-            {/* {(
+            {(
               cartItems.reduce((acc, cur) => {
-                return (acc += cur.quantity * cur.price);
+                return (acc += cur.quantity! * cur.price);
               }, 0)
-            )} */}
+            )}
           </span>
         </div>
       </article>

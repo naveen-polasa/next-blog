@@ -2,10 +2,10 @@
 // import CartDetails from "../components/CartDetails";
 import Link from "next/link";
 import { useCartContext } from "../context";
+import CartDetails from "../components/CartDetails";
 
 const Cart = () => {
   const { cartItems, count } = useCartContext();
-  console.log(cartItems, count);
   if (cartItems.length < 1) {
     return (
       <div className="pt-44 text-center py-4 min-h-[calc(100vh-9rem)]">
@@ -20,7 +20,7 @@ const Cart = () => {
   }
   return (
     <main className="min-h-[calc(100vh-9rem)]">
-      <div>{/* <CartDetails /> */}</div>
+      <div> <CartDetails /></div>
     </main>
   );
 };

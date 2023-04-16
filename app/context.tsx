@@ -2,45 +2,95 @@
 import { ReactNode, useContext, useReducer, useState } from "react";
 import { createContext } from "react";
 
-type UseCartReducerType = {
-  Add: (payload: ResType) => void;
-  cartItems: ResType[];
+// type UseCartReducerType = {
+//   Add: (payload: ResType) => void;
+//   Increase: (payload: ResType) => void;
+//   Decrease: (payload: ResType) => void;
+//   cartItems: ResType[];
+//   count: number;
+// };
+
+type StateType = {
   count: number;
+  cartItems: ResType[];
 };
 
-const initContextType: UseCartReducerType = {
-  Add: () => {},
-  cartItems: [],
+const initState: StateType = {
   count: 0,
+  cartItems: [] || JSON.parse(localStorage.getItem("nextCart")!),
 };
 
 type ActionType = {
-  type: "Add";
-  payload: ResType;
+  type: "ADD" | "DEC" | "INC";
+  payload: ResType | number;
 };
 
-function reducer(state: UseCartReducerType, action: ActionType) {
+function reducer(state: StateType, action: ActionType) {
   switch (action.type) {
-    case "Add":
+    case "ADD": {
       return { ...state, cartItems: [action.payload, ...state.cartItems] };
+    }
+    case "DEC": {
+      console.log(action);
+      const newCartItems = state.cartItems.map((item) => {
+        if (item.id === action.payload) {
+          item.quantity! -= 1;
+          if (item.quantity === 0) {
+            return;
+          }
+          return item;
+        }
+        return item;
+      });
+      localStorage.setItem("nextCart", JSON.stringify(newCartItems));
+      return { ...state, cartItems: newCartItems };
+    }
+    case "INC": {
+      console.log(action);
+      const newCartItems = state.cartItems.map((item) => {
+        if (item.id === action.payload) {
+          item.quantity! += 1;
+          return item;
+        }
+        return item;
+      });
+      localStorage.setItem("nextCart", JSON.stringify(newCartItems));
+      return { ...state, cartItems: newCartItems };
+    }
     default:
       throw new Error();
   }
 }
 
-const useCartReducer = () => {
-  const [state, dispatch] = useReducer(reducer, initContextType);
+const UseCartContext = () => {
+  const [state, dispatch] = useReducer(reducer, initState);
   const Add = (payload: ResType) => {
-    dispatch({ type: "Add", payload });
+    dispatch({ type: "ADD", payload });
   };
-  return { ...state, Add };
+  const Increase = (payload: number) => {
+    dispatch({ type: "INC", payload });
+  };
+  const Decrease = (payload: number) => {
+    dispatch({ type: "DEC", payload });
+  };
+  return { ...state, Add, Increase, Decrease };
 };
 
-const CartContext = createContext<UseCartReducerType>(initContextType);
+type UseCartContextType = ReturnType<typeof UseCartContext>;
+
+const initContextType: UseCartContextType = {
+  Add: () => {},
+  Increase: () => {},
+  Decrease: () => {},
+  cartItems: [] || JSON.parse(localStorage.getItem("nextCart")!),
+  count: 0,
+};
+
+const CartContext = createContext<UseCartContextType>(initContextType);
 
 const ContextProvider = ({ children }: { children: ReactNode }) => {
   return (
-    <CartContext.Provider value={useCartReducer()}>
+    <CartContext.Provider value={UseCartContext()}>
       {children}
     </CartContext.Provider>
   );

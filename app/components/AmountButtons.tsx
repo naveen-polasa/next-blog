@@ -1,6 +1,11 @@
 import { FaMinus, FaPlus } from "react-icons/fa";
 
-const AmountButtons = ({ amount, increase, decrease }) => {
+type BtnType = {
+  amount: number;
+  increase: () => {};
+  decrease: () => {};
+};
+const AmountButtons = ({ amount, increase, decrease }: BtnType) => {
   return (
     <div className="flex gap-x-4">
       <button type="button" onClick={decrease}>

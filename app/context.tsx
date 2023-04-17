@@ -12,10 +12,17 @@ const initState: StateType = {
   cartItems: JSON.parse(localStorage.getItem("nextCart")!) || [],
 };
 
-type ActionType = {
+type ActionType1 = {
   type: "ADD" | "DEC" | "INC" | "REM" | "CLEAR";
   payload: ResType | number;
 };
+
+type ActionType2 = {
+  type: "ADD" | "DEC" | "INC" | "REM" | "CLEAR";
+  payload: number;
+};
+
+type ActionType = ActionType1 | ActionType2;
 
 function reducer(state: StateType, action: ActionType) {
   switch (action.type) {

@@ -6,6 +6,7 @@ import { FaShoppingCart } from "react-icons/fa";
 
 const Navbar = () => {
   const { cartItems } = useCartContext();
+
   return (
     <nav className="py-2 h-[70px] border-b sticky top-0 bg-white z-20">
       <div className="flex justify-between px-5 max-w-7xl mx-auto">
@@ -27,7 +28,7 @@ const Navbar = () => {
             <span className="relative">
               <FaShoppingCart size="24px" />
               <span className="absolute -top-3 -right-3 bg-yellow-400 rounded-full px-1.5">
-                {cartItems.reduce((acc, cur) => {
+                {cartItems.reduce((acc: number, cur: ResType) => {
                   return acc + cur.quantity!;
                 }, 0)}
               </span>

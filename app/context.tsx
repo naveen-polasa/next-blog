@@ -2,37 +2,45 @@
 import { ReactNode, useContext, useReducer, useState } from "react";
 import { createContext } from "react";
 
-// type UseCartReducerType = {
-//   Add: (payload: ResType) => void;
-//   Increase: (payload: ResType) => void;
-//   Decrease: (payload: ResType) => void;
-//   cartItems: ResType[];
-//   count: number;
-// };
-
 type StateType = {
   count: number;
-  cartItems: ResType[];
+  cartItems: ResType[] | [];
 };
 
 const initState: StateType = {
   count: 0,
-  cartItems: [] || JSON.parse(localStorage.getItem("nextCart")!),
+  cartItems: JSON.parse(localStorage.getItem("nextCart")!) || [],
 };
 
 type ActionType = {
-  type: "ADD" | "DEC" | "INC";
+  type: "ADD" | "DEC" | "INC" | "REM" | "CLEAR";
   payload: ResType | number;
 };
 
 function reducer(state: StateType, action: ActionType) {
   switch (action.type) {
     case "ADD": {
-      return { ...state, cartItems: [action.payload, ...state.cartItems] };
+      const isThere = state.cartItems.find(
+        (item) => item.id === action.payload.id
+      );
+      let newItems;
+      if (isThere) {
+        newItems = state.cartItems.filter((item) => {
+          if (item.id === action.payload.id) {
+            item.quantity += action.payload.quantity;
+            return item;
+          }
+          return item;
+        });
+      }
+      if (!isThere) {
+        newItems = [action.payload, ...state.cartItems];
+      }
+      localStorage.setItem("nextCart", JSON.stringify(newItems));
+      return { ...state, cartItems: newItems };
     }
     case "DEC": {
-      console.log(action);
-      const newCartItems = state.cartItems.map((item) => {
+      const newCartItems = state.cartItems.filter((item) => {
         if (item.id === action.payload) {
           item.quantity! -= 1;
           if (item.quantity === 0) {
@@ -46,7 +54,6 @@ function reducer(state: StateType, action: ActionType) {
       return { ...state, cartItems: newCartItems };
     }
     case "INC": {
-      console.log(action);
       const newCartItems = state.cartItems.map((item) => {
         if (item.id === action.payload) {
           item.quantity! += 1;
@@ -56,6 +63,15 @@ function reducer(state: StateType, action: ActionType) {
       });
       localStorage.setItem("nextCart", JSON.stringify(newCartItems));
       return { ...state, cartItems: newCartItems };
+    }
+    case "REM": {
+      const newItems = state.cartItems.filter(
+        (item) => item.id !== action.payload
+      );
+      return { ...state, cartItems: newItems };
+    }
+    case "CLEAR": {
+      return { ...state, cartItems: [] };
     }
     default:
       throw new Error();
@@ -73,7 +89,13 @@ const UseCartContext = () => {
   const Decrease = (payload: number) => {
     dispatch({ type: "DEC", payload });
   };
-  return { ...state, Add, Increase, Decrease };
+  const Remove = (payload: number) => {
+    dispatch({ type: "REM", payload });
+  };
+  const Clear = () => {
+    dispatch({ type: "CLEAR" });
+  };
+  return { ...state, Add, Increase, Decrease, Clear, Remove };
 };
 
 type UseCartContextType = ReturnType<typeof UseCartContext>;
@@ -82,6 +104,8 @@ const initContextType: UseCartContextType = {
   Add: () => {},
   Increase: () => {},
   Decrease: () => {},
+  Clear: () => {},
+  Remove: () => {},
   cartItems: [] || JSON.parse(localStorage.getItem("nextCart")!),
   count: 0,
 };

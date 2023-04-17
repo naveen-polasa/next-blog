@@ -10,7 +10,7 @@ export default async function Products() {
     <>
       <section className="max-w-7xl mx-auto min-h-[calc(100vh-8rem)] ">
         <div>
-          <Search />
+          {/* <Search /> */}
         </div>
         {!data.length && <NotFound />}
         <div className=" max-w-6xl mx-auto flex flex-wrap justify-center md:justify-around lg:justify-around  gap-x-8 gap-y-5 mt-8">

@@ -1,5 +1,4 @@
 "use client";
-// import CartDetails from "../components/CartDetails";
 import Link from "next/link";
 import { useCartContext } from "../context";
 import CartDetails from "../components/CartDetails";
